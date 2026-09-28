@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Weather App</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <main class="app">
+
+    <!-- SEARCH -->
+
+    <div class="search-row">
+
+      <div class="search-wrapper">
+
+        <span class="search-icon">🔍</span>
+
+        <input
+          type="text"
+          id="city-input"
+          placeholder="Search for a city or airport"
+          autocomplete="off"
+        >
+
+        <div
+          id="suggestions"
+          class="suggestions hidden"
+        ></div>
+
+      </div>
+
+      <button
+        id="search-btn"
+        type="button"
+      >
+        Search
+      </button>
+
+    </div>
+
+
+    <p id="status"></p>
+
+
+    <!-- HOME / SAVED CITIES -->
+
+    <section
+      id="list-view"
+      class="screen"
+    >
+
+      <div
+        id="cities-list"
+        class="cities-list"
+      ></div>
+
+
+      <div
+        id="empty-message"
+        class="hero-empty-card"
+      >
+
+        <div class="floating-weather-icon">
+          🌤️
+        </div>
+
+        <h2 class="hero-title">
+          Explore World Weather
+        </h2>
+
+        <p class="hero-subtitle">
+          Search any city above to see the current weather,
+          hourly forecast and 7-day forecast.
+        </p>
+
+
+        <div class="quick-cities">
+
+          <span class="quick-label">
+            POPULAR CITIES
+          </span>
+
+          <div class="quick-chips">
+
+            <button
+              class="chip-btn"
+              data-city="Baku"
+              type="button"
+            >
+              Baku
+            </button>
+
+            <button
+              class="chip-btn"
+              data-city="London"
+              type="button"
+            >
+              London
+            </button>
+
+            <button
+              class="chip-btn"
+              data-city="New York"
+              type="button"
+            >
+              New York
+            </button>
+
+            <button
+              class="chip-btn"
+              data-city="Tokyo"
+              type="button"
+            >
+              Tokyo
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- WEATHER DETAILS -->
+
+    <section
+      id="detail-view"
+      class="screen hidden"
+    >
+
+      <div class="detail-top-bar">
+
+        <button
+          id="back-btn"
+          class="back-btn"
+          type="button"
+        >
+          ← Back
+        </button>
+
+        <button
+          id="save-btn"
+          class="save-btn"
+          type="button"
+        >
+          ☆
+        </button>
+
+      </div>
+
+
+      <!-- CURRENT WEATHER -->
+
+      <div class="current">
+
+        <h1 id="location-value">
+          City
+        </h1>
+
+        <div class="current-temp">
+          <span id="temp-value">--</span>°
+        </div>
+
+        <div class="current-condition">
+
+          <span id="weather-icon">
+            ☀️
+          </span>
+
+          <span id="condition-text">
+            Weather
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- HOURLY FORECAST -->
+
+      <div class="glass-card">
+
+        <div class="card-label">
+          HOURLY FORECAST
+        </div>
+
+        <div
+          id="hourly-row"
+          class="hourly-row"
+        ></div>
+
+      </div>
+
+
+      <!-- 7 DAY FORECAST -->
+
+      <div class="glass-card">
+
+        <div class="card-label">
+          7-DAY FORECAST
+        </div>
+
+        <div
+          id="daily-list"
+          class="daily-list"
+        ></div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <script src="script.js"></script>
+
+</body>
+</html>
