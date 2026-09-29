@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#3a91f6">
 
   <title>Weather App</title>
 
@@ -12,14 +12,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap"
     rel="stylesheet"
   >
 
   <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="theme-sunny">
+
+  <!-- Animated rain / snow layer -->
+  <canvas id="weather-canvas" class="weather-canvas" aria-hidden="true"></canvas>
 
   <main class="app">
 
@@ -29,107 +32,85 @@
 
       <div class="search-wrapper">
 
-        <span class="search-icon">🔍</span>
+        <span class="search-icon" aria-hidden="true">🔍</span>
 
         <input
           type="text"
           id="city-input"
-          placeholder="Search for a city or airport"
+          placeholder="Search for a city"
           autocomplete="off"
+          role="combobox"
+          aria-label="Search for a city"
+          aria-autocomplete="list"
+          aria-expanded="false"
+          aria-controls="suggestions"
         >
 
         <div
           id="suggestions"
           class="suggestions hidden"
+          role="listbox"
         ></div>
 
       </div>
 
-      <button
-        id="search-btn"
-        type="button"
-      >
+      <button id="search-btn" type="button">
         Search
       </button>
 
     </div>
 
 
-    <p id="status"></p>
+    <!-- TOOLBAR -->
+
+    <div class="toolbar">
+
+      <button id="location-btn" class="toolbar-btn" type="button">
+        📍 My location
+      </button>
+
+      <div
+        id="unit-toggle"
+        class="unit-toggle"
+        role="group"
+        aria-label="Temperature unit"
+      >
+        <button type="button" class="unit-btn" data-unit="celsius">°C</button>
+        <button type="button" class="unit-btn" data-unit="fahrenheit">°F</button>
+      </div>
+
+    </div>
+
+
+    <p id="status" role="status" aria-live="polite"></p>
 
 
     <!-- HOME / SAVED CITIES -->
 
-    <section
-      id="list-view"
-      class="screen"
-    >
+    <section id="list-view" class="screen">
 
-      <div
-        id="cities-list"
-        class="cities-list"
-      ></div>
+      <div id="cities-list" class="cities-list"></div>
 
+      <div id="empty-message" class="hero-empty-card">
 
-      <div
-        id="empty-message"
-        class="hero-empty-card"
-      >
+        <div class="floating-weather-icon" aria-hidden="true">🌤️</div>
 
-        <div class="floating-weather-icon">
-          🌤️
-        </div>
-
-        <h2 class="hero-title">
-          Explore World Weather
-        </h2>
+        <h2 class="hero-title">Explore World Weather</h2>
 
         <p class="hero-subtitle">
-          Search any city above to see the current weather,
-          hourly forecast and 7-day forecast.
+          Search any city above, or use your location, to see the current
+          weather, hourly forecast and 7-day forecast. Tap ☆ to save a city here.
         </p>
-
 
         <div class="quick-cities">
 
-          <span class="quick-label">
-            POPULAR CITIES
-          </span>
+          <span class="quick-label">Popular cities</span>
 
           <div class="quick-chips">
-
-            <button
-              class="chip-btn"
-              data-city="Baku"
-              type="button"
-            >
-              Baku
-            </button>
-
-            <button
-              class="chip-btn"
-              data-city="London"
-              type="button"
-            >
-              London
-            </button>
-
-            <button
-              class="chip-btn"
-              data-city="New York"
-              type="button"
-            >
-              New York
-            </button>
-
-            <button
-              class="chip-btn"
-              data-city="Tokyo"
-              type="button"
-            >
-              Tokyo
-            </button>
-
+            <button class="chip-btn" data-city="Baku" type="button">Baku</button>
+            <button class="chip-btn" data-city="London" type="button">London</button>
+            <button class="chip-btn" data-city="New York" type="button">New York</button>
+            <button class="chip-btn" data-city="Tokyo" type="button">Tokyo</button>
           </div>
 
         </div>
@@ -141,18 +122,11 @@
 
     <!-- WEATHER DETAILS -->
 
-    <section
-      id="detail-view"
-      class="screen hidden"
-    >
+    <section id="detail-view" class="screen hidden">
 
       <div class="detail-top-bar">
 
-        <button
-          id="back-btn"
-          class="back-btn"
-          type="button"
-        >
+        <button id="back-btn" class="back-btn" type="button">
           ← Back
         </button>
 
@@ -160,6 +134,7 @@
           id="save-btn"
           class="save-btn"
           type="button"
+          aria-label="Save city"
         >
           ☆
         </button>
@@ -171,64 +146,55 @@
 
       <div class="current">
 
-        <h1 id="location-value">
-          City
-        </h1>
+        <h1 id="location-value">City</h1>
+
+        <p id="location-sub" class="location-sub"></p>
 
         <div class="current-temp">
           <span id="temp-value">--</span>°
         </div>
 
         <div class="current-condition">
-
-          <span id="weather-icon">
-            ☀️
-          </span>
-
-          <span id="condition-text">
-            Weather
-          </span>
-
+          <span id="weather-icon" aria-hidden="true">☀️</span>
+          <span id="condition-text">Weather</span>
         </div>
 
+        <p id="hilo-value" class="current-hilo"></p>
+
       </div>
+
+
+      <!-- WEATHER ALERTS -->
+
+      <div id="alerts" class="alerts hidden"></div>
 
 
       <!-- HOURLY FORECAST -->
 
       <div class="glass-card">
-
-        <div class="card-label">
-          HOURLY FORECAST
-        </div>
-
-        <div
-          id="hourly-row"
-          class="hourly-row"
-        ></div>
-
+        <div class="card-label">Hourly forecast</div>
+        <div id="hourly-row" class="hourly-row"></div>
       </div>
 
 
       <!-- 7 DAY FORECAST -->
 
       <div class="glass-card">
+        <div class="card-label">7-day forecast</div>
+        <div id="daily-list" class="daily-list"></div>
+      </div>
 
-        <div class="card-label">
-          7-DAY FORECAST
-        </div>
 
-        <div
-          id="daily-list"
-          class="daily-list"
-        ></div>
+      <!-- DETAILS GRID -->
 
+      <div class="glass-card">
+        <div class="card-label">Weather details</div>
+        <div id="details-grid" class="details-grid"></div>
       </div>
 
     </section>
 
   </main>
-
 
   <script src="script.js"></script>
 
